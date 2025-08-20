@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: tripweather
+
+server:
+  port: 9095
+
+weather:
+  api:
+    url: https://api.openweathermap.org/data/2.5/weather
+    key: ${WEATHER_API_KEY}
