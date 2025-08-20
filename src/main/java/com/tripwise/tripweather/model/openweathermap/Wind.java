@@ -3,7 +3,6 @@ package com.tripwise.tripweather.model.openweathermap;
 import lombok.Data;
 
 @Data
-public class Weather {
-    private String description;
-    private String icon;
+public class Wind {
+    private double speed;
 }
