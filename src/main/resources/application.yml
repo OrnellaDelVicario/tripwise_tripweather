@@ -7,5 +7,6 @@ server:
 
 weather:
   api:
-    url: https://api.openweathermap.org/data/2.5/weather
+    current: https://api.openweathermap.org/data/2.5/weather
+    forecast: https://api.openweathermap.org/data/2.5/forecast
     key: ${WEATHER_API_KEY}
