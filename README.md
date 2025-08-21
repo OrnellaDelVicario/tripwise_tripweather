@@ -2,11 +2,11 @@
 
 ## 📄 Overview
 
-The `TripWeather` service is a microservice designed to provide essential weather data for the TripWise application. Its primary function is to act as an **API wrapper** for an external weather service, providing a unified and reliable source of weather information for other microservices.
+The `TripWeather` service is a microservice designed to provide essential weather data for the TripWise application. Its primary function is to serve as an **API wrapper** for the OpenWeatherMap API, providing a reliable and unified source of weather information for both front-end applications and other microservices.
 
-This service handles two main functionalities:
-1.  **Current Weather**: Provides a real-time weather snapshot for a given city.
-2.  **Weather Forecast**: Delivers a 5-day weather forecast, consolidated into daily entries, for travel planning.
+This service is built with a dual-purpose architecture:
+* **Public Access:** Provides general weather data (current and forecast) that does not require user authentication. This is intended for public-facing features on the TripWise application, such as showing the weather on the homepage.
+* **Secure Access:** Provides weather data for authenticated user actions, such as saving weather information to a user's journal entry.
 
 ---
 
@@ -38,76 +38,53 @@ The service will start on port 9095, as defined in application.yml.
 ```bash
 ./mvnw spring-boot:run
 ```
-
+---
 
 
 ## 🌐 API Endpoints
 
-The `TripWeather` service exposes the following RESTful endpoints for other microservices to consume. All endpoints use the base URL `http://localhost:9095/weather`.
+The `TripWeather` service exposes the following RESTful endpoints. All endpoints use the base URL `http://localhost:9095/weather`.
 
-### 1. Get Current Weather
+### 1. Public Endpoints (No Authentication Required)
 
-* **Endpoint**: `/current/city/{cityName}`
-* **Method**: `GET`
-* **Description**: Provides current weather details for a specific city. This endpoint is used by the **Journal Service** to record weather at the time of an activity.
+These endpoints are designed for public-facing features, such as showing current weather or a forecast on a landing page. They are intended for consumption by the front-end.
 
-**Example Request:**
-```http
-GET http://localhost:9095/weather/current/city/London
-```
+* **Get Current Weather by City Name**
+    * **Endpoint**: `/current/city/{cityName}`
+    * **Method**: `GET`
+    * **Description**: Provides a real-time weather snapshot for a given city.
 
-**Example Response (JSON):**
-```
-{
-    "cityName": "London",
-    "temperature": 15.6,
-    "feelsLike": 14.8,
-    "description": "overcast clouds",
-    "icon": "04d",
-    "humidity": 68,
-    "windSpeed": 4.12
-}
-```
+* **Get Forecast by City Name**
+    * **Endpoint**: `/forecast/city/{cityName}`
+    * **Method**: `GET`
+    * **Description**: Provides a simplified 5-day weather forecast.
 
+* **Get Current Weather by Coordinates**
+    * **Endpoint**: `/coords/current?lat={lat}&lon={lon}`
+    * **Method**: `GET`
+    * **Description**: Retrieves the current weather based on geographical coordinates. This is useful for fetching the weather for a user's current location.
 
+* **Get Forecast by Coordinates**
+    * **Endpoint**: `/coords/forecast?lat={lat}&lon={lon}`
+    * **Method**: `GET`
+    * **Description**: Retrieves a 5-day weather forecast based on geographical coordinates.
 
-### 2. Get Weather Forecast
+---
 
-* **Endpoint**: `/forecast/city/{cityName}`
-* **Method**: `GET`
-* **Description**: Provides a simplified 5-day weather forecast (one entry per day, consolidated from 3-hour intervals). This is used by the **Itinerary Service** for trip planning.
+### 2. Secure Endpoint (Authentication Required)
 
-**Example Request:**
+This endpoint is for internal, service-to-service communication that requires a valid JWT for authentication. It's intended for the Journal service to save weather data linked to a specific user's entry.
 
-```http
-GET http://localhost:9095/weather/forecast/city/Paris
-```
+* **Endpoint**: `/journal`
+* **Method**: `POST`
+* **Description**: Accepts a JSON payload from the Journal service containing weather data and a user's JWT. (Note: This endpoint is conceptual and will be implemented in a future task).
 
-**Example Response (JSON):**
-
-```
-{
-    "cityName": "Paris",
-    "dailyForecasts": [
-        {
-            "date": "2025-08-21",
-            "temperature": 21.4,
-            "description": "light rain",
-            "icon": "10d"
-        },
-        {
-            "date": "2025-08-22",
-            "temperature": 23.1,
-            "description": "sunny",
-            "icon": "01d"
-        }
-        // ... more days
-    ]
-}
-```
 ---
 
 ## 💡 Design & Architecture
+
+### **Dual-Purpose API**
+The most important architectural decision for this service is its dual-purpose nature. By providing both public (unauthenticated) and secure (authenticated) endpoints, the service can efficiently support different use cases without compromising security. Public endpoints allow for fast, simple access for general features, while secure endpoints ensure that sensitive, user-specific data is handled with proper authentication.
 
 ### **Resilience**
 The service is designed to be resilient to external API failures. The `WeatherService` class includes `try-catch` blocks to handle network errors or invalid responses from the OpenWeatherMap API. In case of an error, the service returns a default, empty object instead of crashing, ensuring stability for its consumers.
