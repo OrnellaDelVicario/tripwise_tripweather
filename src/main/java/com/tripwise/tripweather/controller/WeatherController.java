@@ -27,8 +27,7 @@ public class WeatherController {
      */
     @GetMapping("/current/city/{cityName}")
     public ResponseEntity<WeatherResponse> getCurrentWeather(@PathVariable String cityName) {
-        WeatherResponse weather = weatherService.getCurrentWeather(cityName);
-        return ResponseEntity.ok(weather);
+        return weatherService.getCurrentWeather(cityName);
     }
 
     /**
@@ -40,8 +39,7 @@ public class WeatherController {
      */
     @GetMapping("/forecast/city/{cityName}")
     public ResponseEntity<Forecast> getForecast(@PathVariable String cityName) {
-        Forecast forecast = weatherService.getForecast(cityName);
-        return ResponseEntity.ok(forecast);
+        return weatherService.getForecast(cityName);
     }
 
     /**
@@ -55,8 +53,7 @@ public class WeatherController {
      */
     @GetMapping("/coords/current")
     public ResponseEntity<WeatherResponse> getWeatherByCoords(@RequestParam double lat, @RequestParam double lon) {
-        WeatherResponse weather = weatherService.getWeatherByCoords(lat, lon);
-        return ResponseEntity.ok(weather);
+        return weatherService.getWeatherByCoords(lat, lon);
     }
 
     /**
@@ -70,7 +67,6 @@ public class WeatherController {
      */
     @GetMapping("/coords/forecast")
     public ResponseEntity<Forecast> getForecastByCoords(@RequestParam double lat, @RequestParam double lon) {
-        Forecast forecast = weatherService.getForecastByCoords(lat, lon);
-        return ResponseEntity.ok(forecast);
+        return weatherService.getForecastByCoords(lat, lon);
     }
 }

@@ -7,7 +7,10 @@ import com.tripwise.tripweather.model.openweathermap.OpenWeatherResponse;
 import com.tripwise.tripweather.model.openweathermap.ForecastResponse;
 import com.tripwise.tripweather.model.openweathermap.ForecastItem;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDate;
@@ -43,7 +46,7 @@ public class WeatherService {
      * @param cityName The name of the city to get weather for.
      * @return A WeatherResponse object with current weather details.
      */
-    public WeatherResponse getCurrentWeather(String cityName) {
+    public ResponseEntity<WeatherResponse> getCurrentWeather(String cityName) {
         String fullUrl = String.format("%s?q=%s&appid=%s&units=metric", currentWeatherUrl, cityName, apiKey);
 
         try {
@@ -58,10 +61,13 @@ public class WeatherService {
             weatherResponse.setHumidity(apiResponse.getMain().getHumidity());
             weatherResponse.setWindSpeed(apiResponse.getWind().getSpeed());
 
-            return weatherResponse;
+            return ResponseEntity.ok(weatherResponse);
+        } catch (HttpClientErrorException.NotFound e) {
+            System.err.println("City not found: " + cityName);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         } catch (Exception e) {
             System.err.println("Error calling current weather API for " + cityName + ": " + e.getMessage());
-            return new WeatherResponse();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
@@ -73,7 +79,7 @@ public class WeatherService {
      * @param cityName The name of the city to get the forecast for.
      * @return A Forecast object with a list of daily weather forecasts.
      */
-    public Forecast getForecast(String cityName) {
+    public ResponseEntity<Forecast> getForecast(String cityName) {
         String fullUrl = String.format("%s?q=%s&appid=%s&units=metric", forecastUrl, cityName, apiKey);
 
         try {
@@ -101,10 +107,13 @@ public class WeatherService {
             forecast.setCityName(cityName);
             forecast.setDailyForecasts(dailyForecasts);
 
-            return forecast;
+            return ResponseEntity.ok(forecast);
+        } catch (HttpClientErrorException.NotFound e) {
+            System.err.println("City not found: " + cityName);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         } catch (Exception e) {
             System.err.println("Error calling weather forecast API for " + cityName + ": " + e.getMessage());
-            return new Forecast();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
@@ -116,7 +125,7 @@ public class WeatherService {
      * @param lon The longitude of the location.
      * @return A WeatherResponse object with current weather details.
      */
-    public WeatherResponse getWeatherByCoords(double lat, double lon) {
+    public ResponseEntity<WeatherResponse> getWeatherByCoords(double lat, double lon) {
         String fullUrl = String.format("%s?lat=%f&lon=%f&appid=%s&units=metric", currentWeatherUrl, lat, lon, apiKey);
 
         try {
@@ -131,10 +140,13 @@ public class WeatherService {
             weatherResponse.setHumidity(apiResponse.getMain().getHumidity());
             weatherResponse.setWindSpeed(apiResponse.getWind().getSpeed());
 
-            return weatherResponse;
+            return ResponseEntity.ok(weatherResponse);
+        } catch (HttpClientErrorException.NotFound e) {
+            System.err.println("Coordinates not found: " + lat + ", " + lon);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         } catch (Exception e) {
             System.err.println("Error calling current weather API for coords (" + lat + ", " + lon + "): " + e.getMessage());
-            return new WeatherResponse();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
@@ -146,7 +158,15 @@ public class WeatherService {
      * @param lon The longitude of the location.
      * @return A Forecast object with a list of daily weather forecasts.
      */
-    public Forecast getForecastByCoords(double lat, double lon) {
+    /**
+     * Fetches weather forecast data for a given location using geographical coordinates.
+     * This method mirrors the getForecast(cityName) method but uses lat/lon.
+     *
+     * @param lat The latitude of the location.
+     * @param lon The longitude of the location.
+     * @return A Forecast object with a list of daily weather forecasts.
+     */
+    public ResponseEntity<Forecast> getForecastByCoords(double lat, double lon) {
         String fullUrl = String.format("%s?lat=%f&lon=%f&appid=%s&units=metric", forecastUrl, lat, lon, apiKey);
 
         try {
@@ -170,13 +190,23 @@ public class WeatherService {
             }
 
             Forecast forecast = new Forecast();
-            forecast.setCityName(apiResponse.getCity().getName()); // Get the city name from the response
+
+            // Justification: Added this null check to prevent a NullPointerException
+            // in case the API response doesn't contain a city object.
+            if (apiResponse.getCity() != null) {
+                forecast.setCityName(apiResponse.getCity().getName());
+            } else {
+                forecast.setCityName("Unknown Location");
+            }
+
             forecast.setDailyForecasts(dailyForecasts);
 
-            return forecast;
+            return ResponseEntity.ok(forecast);
+        } catch (HttpClientErrorException.NotFound e) {
+            System.err.println("Coordinates not found: " + lat + ", " + lon);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         } catch (Exception e) {
             System.err.println("Error calling forecast API for coords (" + lat + ", " + lon + "): " + e.getMessage());
-            return new Forecast();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
-}
