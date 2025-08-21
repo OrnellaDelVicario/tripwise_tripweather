@@ -20,7 +20,6 @@ public class WeatherController {
 
     /**
      * Endpoint to get current weather for a specific city.
-     * This endpoint is intended for the Journal service.
      * The URL path is /weather/current/city/{cityName}.
      *
      * @param cityName The name of the city provided in the URL path.
@@ -34,7 +33,6 @@ public class WeatherController {
 
     /**
      * Endpoint to get a 5-day weather forecast for a specific city.
-     * This endpoint is intended for the Itinerary service.
      * The URL path is /weather/forecast/city/{cityName}.
      *
      * @param cityName The name of the city provided in the URL path.
@@ -43,6 +41,36 @@ public class WeatherController {
     @GetMapping("/forecast/city/{cityName}")
     public ResponseEntity<Forecast> getForecast(@PathVariable String cityName) {
         Forecast forecast = weatherService.getForecast(cityName);
+        return ResponseEntity.ok(forecast);
+    }
+
+    /**
+     * Endpoint to get current weather by geographical coordinates.
+     * This is for the user's current location.
+     * The URL path is /weather/coords/current?lat={lat}&lon={lon}.
+     *
+     * @param lat The latitude of the location.
+     * @param lon The longitude of the location.
+     * @return A ResponseEntity containing the weather data.
+     */
+    @GetMapping("/coords/current")
+    public ResponseEntity<WeatherResponse> getWeatherByCoords(@RequestParam double lat, @RequestParam double lon) {
+        WeatherResponse weather = weatherService.getWeatherByCoords(lat, lon);
+        return ResponseEntity.ok(weather);
+    }
+
+    /**
+     * Endpoint to get a 5-day weather forecast by geographical coordinates.
+     * This is for the user's current location.
+     * The URL path is /weather/coords/forecast?lat={lat}&lon={lon}.
+     *
+     * @param lat The latitude of the location.
+     * @param lon The longitude of the location.
+     * @return A ResponseEntity containing the weather data.
+     */
+    @GetMapping("/coords/forecast")
+    public ResponseEntity<Forecast> getForecastByCoords(@RequestParam double lat, @RequestParam double lon) {
+        Forecast forecast = weatherService.getForecastByCoords(lat, lon);
         return ResponseEntity.ok(forecast);
     }
 }
