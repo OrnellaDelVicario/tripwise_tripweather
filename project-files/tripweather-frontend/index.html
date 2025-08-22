@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TripWeather</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header>
+        <h1>TripWeather</h1>
+    </header>
+
+    <main>
+        <section class="search-section">
+            <input type="text" id="city-input" placeholder="Enter a city...">
+            <button id="search-btn">Get Weather</button>
+            <button id="current-location-btn">My Location</button>
+        </section>
+
+        <section class="weather-display">
+            <h2>Current Weather</h2>
+            <div id="current-weather">
+                </div>
+        </section>
+
+        <section class="forecast-display">
+            <h2>5-Day Forecast</h2>
+            <div id="forecast-container">
+                </div>
+        </section>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
