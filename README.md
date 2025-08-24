@@ -14,11 +14,16 @@ This service is built with a dual-purpose architecture:
 
 ### 🛠️ Technology Stack
 
-* **Language**: Java
-* **Framework**: Spring Boot
-* **Build Tool**: Maven
-* **Dependencies**: Spring Web, Lombok
-* **External API**: OpenWeatherMap
+* **Backend (`tripweather-backend`)**
+    * Language: Java
+    * Framework: Spring Boot
+    * Build Tool: Maven
+    * External API: OpenWeatherMap
+* **Frontend (`tripweather-frontend`)**
+    * Language: JavaScript, HTML
+    * Styling: CSS
+    * Libraries: Leaflet.js (for maps), Font Awesome (for icons)
+
 
 ### 🔑 API Key Configuration
 
