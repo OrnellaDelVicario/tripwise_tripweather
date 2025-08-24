@@ -12,4 +12,7 @@ import java.util.List;
 public class ForecastResponse {
     @JsonProperty("list")
     private List<ForecastItem> forecastList;
+
+    // Correctly map the 'city' object from the API response
+    private City city;
 }

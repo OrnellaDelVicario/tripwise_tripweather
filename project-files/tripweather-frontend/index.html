@@ -1,37 +1,60 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TripWeather</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
 
-    <header>
-        <h1>TripWeather</h1>
-    </header>
+<header>
+    <h1>TripWeather</h1>
+</header>
 
-    <main>
-        <section class="search-section">
+<div id="map-background">
+    <div id="map"></div>
+</div>
+
+<main>
+    <section class="intro-section">
+        <h2>Plan your journey. Check the weather.</h2>
+    </section>
+
+    <section class="search-section">
+        <div class="search-container">
             <input type="text" id="city-input" placeholder="Enter a city...">
-            <button id="search-btn">Get Weather</button>
-            <button id="current-location-btn">My Location</button>
-        </section>
+            <button id="location-icon-btn">
+                <i class="fas fa-location-arrow"></i>
+            </button>
+        </div>
+        <button id="search-btn" style="display: none;">Get Weather</button>
+    </section>
 
-        <section class="weather-display">
-            <h2>Current Weather</h2>
+    <section id="result-display-container" class="hidden">
+        <div class="button-group">
+            <button class="toggle-btn active" data-target="current-weather-section">Current</button>
+            <button class="toggle-btn" data-target="forecast-weather-section">5-Day Forecast</button>
+        </div>
+
+        <section id="current-weather-section" class="weather-display">
             <div id="current-weather">
-                </div>
+            </div>
         </section>
 
-        <section class="forecast-display">
-            <h2>5-Day Forecast</h2>
-            <div id="forecast-container">
-                </div>
+        <section id="forecast-weather-section" class="weather-display hidden">
+            <div id="forecast-container" class="forecast-container-wrapper">
+            </div>
         </section>
-    </main>
+    </section>
+</main>
 
-    <script src="script.js"></script>
+<script src="script.js"></script>
 </body>
 </html>

@@ -5,8 +5,7 @@ FROM openjdk:17-jdk-slim
 WORKDIR /app
 
 # Copy the JAR file of the application into the container.
-COPY target/tripweather-service-0.0.1-SNAPSHOT.jar /app/tripweather-service.jar
-
+COPY target/tripweather-0.0.1-SNAPSHOT.jar /app/tripweather-service.jar
 # Expose the port on which the Spring Boot application will run
 EXPOSE 9095
 

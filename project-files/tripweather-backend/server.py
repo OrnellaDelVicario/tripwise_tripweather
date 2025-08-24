@@ -21,18 +21,20 @@ def get_weather():
         url = f"{BASE_URL}weather?lat={lat}&lon={lon}&appid={WEATHER_API_KEY}&units=metric"
     else:
         return jsonify({"error": "City or coordinates (lat, lon) are required"}), 400
-    
+
     response = requests.get(url)
     data = response.json()
-    
-    if data.get("cod") != 200:
-        return jsonify({"error": data.get("message")}), 404
+
+    if str(data.get("cod")) != "200":
+        return jsonify({"error": data.get("message", "City not found")}), 404
 
     weather_data = {
         "city": data["name"],
         "temperature": data["main"]["temp"],
         "condition": data["weather"][0]["description"],
-        "icon": data["weather"][0]["icon"]
+        "icon": data["weather"][0]["icon"],
+        "lat": data["coord"]["lat"],
+        "lon": data["coord"]["lon"]
     }
     return jsonify(weather_data)
 
@@ -52,8 +54,8 @@ def get_forecast():
     response = requests.get(url)
     data = response.json()
 
-    if data.get("cod") != "200":
-        return jsonify({"error": data.get("message")}), 404
+    if str(data.get("cod")) != "200":
+        return jsonify({"error": data.get("message", "City not found")}), 404
 
     forecast_list = data["list"]
     daily_forecasts = {}
@@ -64,22 +66,24 @@ def get_forecast():
             daily_forecasts[date] = {
                 "high": item["main"]["temp_max"],
                 "low": item["main"]["temp_min"],
-                "icon": item["weather"][0]["icon"]
+                "icon": item["weather"][0]["icon"],
+                "description": item["weather"][0]["description"] # LÍNEA AÑADIDA
             }
         else:
             daily_forecasts[date]["high"] = max(daily_forecasts[date]["high"], item["main"]["temp_max"])
             daily_forecasts[date]["low"] = min(daily_forecasts[date]["low"], item["main"]["temp_min"])
+            daily_forecasts[date]["description"] = item["weather"][0]["description"] # LÍNEA AÑADIDA
 
-    # Convert to a list for the frontend
     forecast_data = []
     for date, temps in daily_forecasts.items():
         forecast_data.append({
             "date": date,
             "high": temps["high"],
             "low": temps["low"],
-            "icon": temps["icon"]
+            "icon": temps["icon"],
+            "description": temps["description"]
         })
-    
+
     return jsonify({"forecast": forecast_data})
 
 if __name__ == "__main__":
