@@ -69,4 +69,8 @@ public class WeatherController {
     public ResponseEntity<Forecast> getForecastByCoords(@RequestParam double lat, @RequestParam double lon) {
         return weatherService.getForecastByCoords(lat, lon);
     }
+    @GetMapping("/api/private/data")
+    public ResponseEntity<String> getPrivateData() {
+        return ResponseEntity.ok("This is private data only for authenticated microservices.");
+    }
 }
