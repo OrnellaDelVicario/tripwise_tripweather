@@ -40,6 +40,22 @@ The service will start on port 9095, as defined in application.yml.
 ```
 ---
 
+### ▶️ How to Test the Frontend
+
+To run and test the frontend application, follow these simple steps:
+
+1.  **Start the Backend**:
+  * Make sure the main Java back-end service is running on your local machine.
+  * The service should be accessible at `http://localhost:9095`.
+
+2.  **Access the Frontend**:
+  * Navigate to the `project-files/tripweather-frontend/` directory.
+  * Open the `index.html` file in your web browser.
+
+The front-end application will automatically connect to the back-end service running on port 9095, allowing you to test the user interface and its functionality.
+
+---
+
 
 ## 🌐 API Endpoints
 
