@@ -14,17 +14,6 @@ weather:
     spring:
       security:
         oauth2:
-          client:
-            registration:
-              google:
-                client-id: ${GOOGLE_CLIENT_ID}
-                client-secret: ${GOOGLE_CLIENT_SECRET}
-                scope:
-                  - openid
-                  - profile
-                  - email
-            provider:
-              google:
-                authorization-uri: https://accounts.google.com/o/oauth2/v2/auth
-                token-uri: https://oauth2.googleapis.com/token
-                jwk-set-uri: https://www.googleapis.com/oauth2/v3/certs
+          resourceserver:
+            jwt:
+              jwk-set-uri: http://localhost:9091/.well-known/jwks.json
