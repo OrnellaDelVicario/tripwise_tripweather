@@ -1,0 +1,15 @@
+services:
+  tripweather:
+    build: .
+    container_name: tripweather
+    ports:
+      - "9095:9095"
+    env_file:
+      - .env
+    restart: unless-stopped
+    networks:
+      - tripwise-backend
+
+networks:
+  tripwise-backend:
+    external: true
