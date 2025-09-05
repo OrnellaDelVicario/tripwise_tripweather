@@ -1,12 +1,33 @@
+#services:
+#  tripweather:
+#    build: .
+#    container_name: tripweather
+#    ports:
+#      - "9095:9095"
+#    env_file:
+#      - .env
+#    restart: unless-stopped
+#    networks:
+#      - tripwise-backend
+#
+#networks:
+#  tripwise-backend:
+#    external: true
+
+
 services:
   tripweather:
-    build: .
+    image: openjdk:17-jdk-slim
     container_name: tripweather
+    build:
+      context: .
+      dockerfile: Dockerfile
     ports:
       - "9095:9095"
+    volumes:
+      - ./.env:/app/.env
     env_file:
       - .env
-    restart: unless-stopped
     networks:
       - tripwise-backend
 
