@@ -1,33 +1,18 @@
-#services:
-#  tripweather:
-#    build: .
-#    container_name: tripweather
-#    ports:
-#      - "9095:9095"
-#    env_file:
-#      - .env
-#    restart: unless-stopped
-#    networks:
-#      - tripwise-backend
-#
-#networks:
-#  tripwise-backend:
-#    external: true
-
-
 services:
+  # This section assumes you also have a 'trippass' service
+  # defined in a separate docker-compose.yml or are running it independently.
+  # The 'tripwise-backend' network allows them to communicate.
+
   tripweather:
-    image: openjdk:17-jdk-slim
+    image: eclipse-temurin:17-jre-focal # Use the same base image as your Dockerfile for consistency
     container_name: tripweather
     build:
       context: .
       dockerfile: Dockerfile
     ports:
       - "9095:9095"
-    volumes:
-      - ./.env:/app/.env
     env_file:
-      - .env
+      - .env # This line passes the environment variables from your .env file to the container
     networks:
       - tripwise-backend
 

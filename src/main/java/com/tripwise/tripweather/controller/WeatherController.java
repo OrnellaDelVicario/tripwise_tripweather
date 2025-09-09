@@ -3,9 +3,11 @@ package com.tripwise.tripweather.controller;
 import com.tripwise.tripweather.model.WeatherResponse;
 import com.tripwise.tripweather.model.Forecast;
 import com.tripwise.tripweather.service.WeatherService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.view.RedirectView;
 
 /**
  * REST controller for handling weather-related requests.
@@ -13,9 +15,10 @@ import org.springframework.web.bind.annotation.*;
  */
 @RestController
 @RequestMapping("/weather")
+@RequiredArgsConstructor
 public class WeatherController {
 
-    @Autowired
+
     private WeatherService weatherService;
 
     /**
@@ -69,6 +72,12 @@ public class WeatherController {
     public ResponseEntity<Forecast> getForecastByCoords(@RequestParam double lat, @RequestParam double lon) {
         return weatherService.getForecastByCoords(lat, lon);
     }
+
+    /**
+     * Endpoint to get private data for authenticated microservices.
+     *
+     * @return A ResponseEntity with private data.
+     */
     @GetMapping("/api/private/data")
     public ResponseEntity<String> getPrivateData() {
         return ResponseEntity.ok("This is private data only for authenticated microservices.");

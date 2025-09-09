@@ -34,7 +34,7 @@ public class WeatherService {
     @Value("${weather.api.forecast}")
     private String forecastUrl;
 
-    @Value("${weather.api.key}")
+    @Value("${WEATHER_API_KEY}")
     private String apiKey;
 
     private final RestTemplate restTemplate = new RestTemplate();
@@ -65,6 +65,12 @@ public class WeatherService {
         } catch (HttpClientErrorException.NotFound e) {
             System.err.println("City not found: " + cityName);
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        } catch (HttpClientErrorException.BadRequest e) {
+            System.err.println("Bad request for " + cityName + ": " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        } catch (HttpClientErrorException.Unauthorized e) {
+            System.err.println("Unauthorized access for " + cityName + ": " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         } catch (Exception e) {
             System.err.println("Error calling current weather API for " + cityName + ": " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
@@ -111,6 +117,12 @@ public class WeatherService {
         } catch (HttpClientErrorException.NotFound e) {
             System.err.println("City not found: " + cityName);
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        } catch (HttpClientErrorException.BadRequest e) {
+            System.err.println("Bad request for " + cityName + ": " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        } catch (HttpClientErrorException.Unauthorized e) {
+            System.err.println("Unauthorized access for " + cityName + ": " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         } catch (Exception e) {
             System.err.println("Error calling weather forecast API for " + cityName + ": " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
@@ -144,20 +156,18 @@ public class WeatherService {
         } catch (HttpClientErrorException.NotFound e) {
             System.err.println("Coordinates not found: " + lat + ", " + lon);
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        } catch (HttpClientErrorException.BadRequest e) {
+            System.err.println("Bad request for coords (" + lat + ", " + lon + "): " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        } catch (HttpClientErrorException.Unauthorized e) {
+            System.err.println("Unauthorized access for coords (" + lat + ", " + lon + "): " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         } catch (Exception e) {
             System.err.println("Error calling current weather API for coords (" + lat + ", " + lon + "): " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
-    /**
-     * Fetches weather forecast data for a given location using geographical coordinates.
-     * This method mirrors the getForecast(cityName) method but uses lat/lon.
-     *
-     * @param lat The latitude of the location.
-     * @param lon The longitude of the location.
-     * @return A Forecast object with a list of daily weather forecasts.
-     */
     /**
      * Fetches weather forecast data for a given location using geographical coordinates.
      * This method mirrors the getForecast(cityName) method but uses lat/lon.
@@ -205,6 +215,12 @@ public class WeatherService {
         } catch (HttpClientErrorException.NotFound e) {
             System.err.println("Coordinates not found: " + lat + ", " + lon);
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        } catch (HttpClientErrorException.BadRequest e) {
+            System.err.println("Bad request for coords (" + lat + ", " + lon + "): " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        } catch (HttpClientErrorException.Unauthorized e) {
+            System.err.println("Unauthorized access for coords (" + lat + ", " + lon + "): " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         } catch (Exception e) {
             System.err.println("Error calling forecast API for coords (" + lat + ", " + lon + "): " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
