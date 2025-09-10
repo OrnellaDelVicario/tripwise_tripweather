@@ -19,7 +19,7 @@ import org.springframework.web.servlet.view.RedirectView;
 public class WeatherController {
 
 
-    private WeatherService weatherService;
+    private final WeatherService weatherService;
 
     /**
      * Endpoint to get current weather for a specific city.

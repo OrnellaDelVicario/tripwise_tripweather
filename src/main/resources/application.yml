@@ -5,7 +5,8 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          jwk-set-uri: http://localhost:9091/.well-known/jwks.json
+          issuer-uri: https://accounts.google.com
+          #jwk-set-uri: http://localhost:9091/.well-known/jwks.json
 
 server:
   port: 9095
